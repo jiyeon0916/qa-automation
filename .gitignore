@@ -1,0 +1,30 @@
+# Environment
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Playwright
+playwright/.cache/
+test-results/
+
+# Reports
+reports/
+
+# Test artifacts
+*.png
+*.mp4
+*.webm
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db

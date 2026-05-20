@@ -1,0 +1,44 @@
+name: Weverse Automation CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          playwright install chromium
+
+      - name: Create reports directory
+        run: mkdir -p reports
+
+      - name: Run tests
+        env:
+          MAILSLURP_API_KEY: ${{ secrets.MAILSLURP_API_KEY }}
+          WEVERSE_URL: https://weverse.io
+          HEADLESS: "true"
+          SLOW_MO: "50"
+          TARGET_COMMUNITY: ${{ vars.TARGET_COMMUNITY || 'BTS' }}
+        run: pytest tests/ -v --tb=short
+
+      - name: Upload test report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-report
+          path: reports/
